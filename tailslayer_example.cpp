@@ -29,7 +29,7 @@ Example user functions that could be passed to tailslayer
 template <typename T>
 [[gnu::always_inline]] inline void dummy_final_work(T val) {
     asm volatile("" :: "r"(val)); // Dummy using value
-    //std::cout << "Val: " << val << "\n";
+    std::cout << "Val: " << val << "\n";
 }
 
 int main() {

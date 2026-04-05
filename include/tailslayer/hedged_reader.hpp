@@ -25,7 +25,7 @@ inline constexpr int CORE_MEAS_B = 12;
 inline constexpr int CORE_MAIN = 14;
 
 namespace detail {
-    static inline void clflush_addr(volatile void *addr) {
+    static inline void clflush_addr(void *addr) {
         asm volatile("clflush (%0)" :: "r"(addr) : "memory");
     }
 
@@ -106,7 +106,7 @@ public:
         for (std::size_t i = 0; i < N; ++i) {
             // We have to keep accounting for making sure we're on different channels
             //  especially when we exceed the channel offset size
-            volatile T* target_addr = get_next_logical_index_address(i, logical_index_);
+            T* target_addr = get_next_logical_index_address(i, logical_index_);
 
             //std::cout << "Storing value: " << +val << " at address: " << (void*) target_addr << "\n";
             *target_addr = val;
@@ -145,7 +145,7 @@ private:
     std::size_t chunk_mask_;
     std::size_t stride_in_elements_;
 
-    std::array<volatile T*, N> replicas_{};
+    std::array<T*, N> replicas_{};
     std::array<int, N> cores_{};
     std::array<std::thread, N> workers_{};
 
@@ -155,12 +155,12 @@ private:
         std::size_t read_index = wait_work(WaitArgs...);
 
         // Only for quick sanity check benchmark counting cycles
-        // volatile T* flush_addr = get_next_logical_index_address(worker_idx, read_index);
+        // T* flush_addr = get_next_logical_index_address(worker_idx, read_index);
         // detail::clflush_addr(flush_addr);
         // detail::mfence_inst();
         // std::uint64_t t0 = detail::rdtsc_lfence();
 
-        volatile T* target_addr = get_next_logical_index_address(worker_idx, read_index);
+        T* target_addr = get_next_logical_index_address(worker_idx, read_index);
 
         // The actual read of the data
         // Passed directly to the inline worker function for processing
@@ -170,7 +170,7 @@ private:
         // std::cout << "\nRunning time: " << t1 - t0 << " cycles\n";
     }
 
-    [[gnu::always_inline]] inline volatile T* get_next_logical_index_address(std::size_t replica_idx,
+    [[gnu::always_inline]] inline T* get_next_logical_index_address(std::size_t replica_idx,
                                                                              std::size_t logical_index) const {
         std::size_t chunk_idx = logical_index >> chunk_shift_; 
         std::size_t offset_in_chunk = logical_index & chunk_mask_;
@@ -204,7 +204,7 @@ private:
 
         char* base = static_cast<char*>(replica_page_);
         for (std::size_t i = 0; i < N; ++i) {
-            replicas_[i] = reinterpret_cast<volatile T*>(base + (i * channel_offset_));
+            replicas_[i] = reinterpret_cast<T*>(base + (i * channel_offset_));
         }
 
         return true;
