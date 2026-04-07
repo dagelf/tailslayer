@@ -4,7 +4,7 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/LaurieWired/tailslayer)](https://github.com/LaurieWired/tailslayer/graphs/contributors)
 [![Follow @lauriewired](https://img.shields.io/twitter/follow/lauriewired?style=social)](https://twitter.com/lauriewired)
 
-![tailslayer_small](https://github.com/user-attachments/assets/375b1990-cab3-484e-8ccd-88d4b91f89f0)
+<img width="2462" height="1106" alt="tailslayer2" src="https://github.com/user-attachments/assets/a35a732e-cd7c-4db9-9acd-34d29b7ad0df" />
 
 # Tailslayer
 
